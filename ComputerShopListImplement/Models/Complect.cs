@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ComputerShopContracts.BindingModels
+namespace ComputerShopListImplement.Models
 {
-    public class ComplectBindingModel
+    public class Complect
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string ComplectName { get; set; }
-        public decimal Price { get; set; }
+        public decimal Price { get; set; }       
     }
 }

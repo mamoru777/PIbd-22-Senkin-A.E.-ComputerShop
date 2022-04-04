@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ComputerShopContracts.BindingModels
 {
-    public class ComplectBindingModel
+    public class SborkaBindingModel
     {
         public int? Id { get; set; }
-        public string ComplectName { get; set; }
-        public decimal Price { get; set; }
+        public string SborkaName { get; set; }
+        public decimal Sum { get; set; }
+        public Dictionary<int, (string, int)> SborkaComplect { get; set; }
     }
 }
