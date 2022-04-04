@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputerShopBuisnessLogic\ComputerShopBuisnessLogic.csproj" />
-    <ProjectReference Include="..\ComputerShopListImplement\ComputerShopListImplement.csproj" />
+    <ProjectReference Include="..\ComputerShopDataBaseImplement\ComputerShopDataBaseImplement.csproj" />
   </ItemGroup>
 
 </Project>

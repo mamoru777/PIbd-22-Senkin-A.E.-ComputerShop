@@ -33,11 +33,11 @@ namespace ComputerShopBuisnessLogic.BuisnessLogic
         }
         public void CreateOrUpdate(ZakupkaBindingModel model)
         {
-            /*var element = _zakupkaStorage.GetElement(new ZakupkaBindingModel { Id = model.Id });
+            var element = _zakupkaStorage.GetElement(new ZakupkaBindingModel { Id = model.Id });
             if (element != null && element.Id != model.Id)
             {
                 throw new Exception("Уже есть комплектующее с таким названием");
-            }*/
+            }
             if (model.Id.HasValue)
             {
                 _zakupkaStorage.Update(model);

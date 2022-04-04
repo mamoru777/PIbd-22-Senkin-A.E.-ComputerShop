@@ -10,52 +10,52 @@ using ComputerShopContracts.StorageContracts;
 
 namespace ComputerShopBuisnessLogic.BuisnessLogic
 {
-    public class SborkaLogic : ISborkaLogic 
+    public class PostavkaLogic : IPostavkaLogic
     {
-        private readonly ISborkaStorage _sborkaStorage;
-        public SborkaLogic(ISborkaStorage sborkaStorage)
+        private readonly IPostavkaStorage _postavkaStorage;
+        public PostavkaLogic(IPostavkaStorage postavkaStorage)
         {
-            _sborkaStorage = sborkaStorage;
+            _postavkaStorage = postavkaStorage;
         }
 
-        public List<SborkaViewModel> Read(SborkaBindingModel model)
+        public List<PostavkaViewModel> Read(PostavkaBindingModel model)
         {
             if (model == null)
             {
-                return _sborkaStorage.GetFullList();
+                return _postavkaStorage.GetFullList();
             }
 
             if (model.Id.HasValue)
             {
-                return new List<SborkaViewModel> { _sborkaStorage.GetElement(model) };
+                return new List<PostavkaViewModel> { _postavkaStorage.GetElement(model) };
             }
-            return _sborkaStorage.GetFilteredList(model);
+            return _postavkaStorage.GetFilteredList(model);
         }
-        public void CreateOrUpdate(SborkaBindingModel model)
+        public void CreateOrUpdate(PostavkaBindingModel model)
         {
-            var element = _sborkaStorage.GetElement(new SborkaBindingModel { Id = model.Id });
+            var element = _postavkaStorage.GetElement(new PostavkaBindingModel { PostavkaName = model.PostavkaName });
             if (element != null && element.Id != model.Id)
             {
                 throw new Exception("Уже есть комплектующее с таким названием");
             }
             if (model.Id.HasValue)
             {
-                _sborkaStorage.Update(model);
+                _postavkaStorage.Update(model);
             }
             else
             {
-                _sborkaStorage.Insert(model);
+                _postavkaStorage.Insert(model);
             }
         }
 
-        public void Delete(SborkaBindingModel model)
+        public void Delete(PostavkaBindingModel model)
         {
-            var element = _sborkaStorage.GetElement(new SborkaBindingModel { Id = model.Id });
+            var element = _postavkaStorage.GetElement(new PostavkaBindingModel { Id = model.Id });
             if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-            _sborkaStorage.Delete(model);
+            _postavkaStorage.Delete(model);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace ComputerShopContracts.ViewModels
         public string SborkaName { get; set; }
         [DisplayName("Цена сборки")]
         public decimal Sum { get; set; }
+        public int PostavshikId { get; set; }
         public Dictionary<int, (string, int)> SborkaComplect { get; set; }
     }
 }

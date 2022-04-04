@@ -57,5 +57,6 @@ namespace ComputerShopBuisnessLogic.BuisnessLogic
             }
             _complectStorage.Delete(model);
         }
+
     }
 }

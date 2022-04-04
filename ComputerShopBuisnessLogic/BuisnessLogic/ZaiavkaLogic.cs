@@ -10,52 +10,52 @@ using ComputerShopContracts.StorageContracts;
 
 namespace ComputerShopBuisnessLogic.BuisnessLogic
 {
-    public class SborkaLogic : ISborkaLogic 
+    public class ZaiavkaLogic : IZaiavkaLogic
     {
-        private readonly ISborkaStorage _sborkaStorage;
-        public SborkaLogic(ISborkaStorage sborkaStorage)
+        private readonly IZaiavkaStorage _zaiavkaStorage;
+        public ZaiavkaLogic(IZaiavkaStorage zaiavkaStorage)
         {
-            _sborkaStorage = sborkaStorage;
+            _zaiavkaStorage = zaiavkaStorage;
         }
 
-        public List<SborkaViewModel> Read(SborkaBindingModel model)
+        public List<ZaiavkaViewModel> Read(ZaiavkaBindingModel model)
         {
             if (model == null)
             {
-                return _sborkaStorage.GetFullList();
+                return _zaiavkaStorage.GetFullList();
             }
 
             if (model.Id.HasValue)
             {
-                return new List<SborkaViewModel> { _sborkaStorage.GetElement(model) };
+                return new List<ZaiavkaViewModel> { _zaiavkaStorage.GetElement(model) };
             }
-            return _sborkaStorage.GetFilteredList(model);
+            return _zaiavkaStorage.GetFilteredList(model);
         }
-        public void CreateOrUpdate(SborkaBindingModel model)
+        public void CreateOrUpdate(ZaiavkaBindingModel model)
         {
-            var element = _sborkaStorage.GetElement(new SborkaBindingModel { Id = model.Id });
+            var element = _zaiavkaStorage.GetElement(new ZaiavkaBindingModel { ZaiavkaName = model.ZaiavkaName });
             if (element != null && element.Id != model.Id)
             {
                 throw new Exception("Уже есть комплектующее с таким названием");
             }
             if (model.Id.HasValue)
             {
-                _sborkaStorage.Update(model);
+                _zaiavkaStorage.Update(model);
             }
             else
             {
-                _sborkaStorage.Insert(model);
+                _zaiavkaStorage.Insert(model);
             }
         }
 
-        public void Delete(SborkaBindingModel model)
+        public void Delete(ZaiavkaBindingModel model)
         {
-            var element = _sborkaStorage.GetElement(new SborkaBindingModel { Id = model.Id });
+            var element = _zaiavkaStorage.GetElement(new ZaiavkaBindingModel { Id = model.Id });
             if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-            _sborkaStorage.Delete(model);
+            _zaiavkaStorage.Delete(model);
         }
     }
 }

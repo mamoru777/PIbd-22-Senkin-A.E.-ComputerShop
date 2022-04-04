@@ -15,5 +15,6 @@ namespace ComputerShopContracts.ViewModels
         public string ComplectName { get; set; }
         [DisplayName("Цена")]
         public decimal Price { get; set; }
+        public int PostavshikId { get; set; }
     }
 }

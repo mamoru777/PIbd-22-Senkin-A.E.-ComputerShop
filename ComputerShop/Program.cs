@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using ComputerShopContracts.BuisnessLogicContracts;
 using ComputerShopContracts.StorageContracts;
 using ComputerShopBuisnessLogic.BuisnessLogic;
-using ComputerShopListImplement.Implements;
+using ComputerShopDataBaseImplement.Implements;
 using Unity;
 using Unity.Lifetime;
 

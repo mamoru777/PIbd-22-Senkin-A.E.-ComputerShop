@@ -108,7 +108,7 @@ namespace ComputerShopListImplement.Implements
 
         private static Zakupka CreateModel(ZakupkaBindingModel model, Zakupka zakupka)
         {
-            zakupka.ComplectId = model.ComplectId;
+            zakupka.ComplectId = model.SborkaId;
             zakupka.ZakupkaName = model.ZakupkaName;
             zakupka.DateBuy = model.DateBuy;
             return zakupka;
@@ -123,8 +123,8 @@ namespace ComputerShopListImplement.Implements
             }
             return new ZakupkaViewModel
             {
-                ComplectId = zakupka.ComplectId,
-                ComplectName = zakupka.ComplectName,
+                SborkaId = zakupka.ComplectId,
+                SborkaName = zakupka.ComplectName,
                 Id = zakupka.Id,
                 ZakupkaName = zakupka.ZakupkaName,
                 DateBuy = zakupka.DateBuy

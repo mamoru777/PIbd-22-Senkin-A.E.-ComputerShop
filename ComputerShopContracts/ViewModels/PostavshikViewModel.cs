@@ -9,7 +9,7 @@ namespace ComputerShopContracts.ViewModels
 {
     public class PostavshikViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [DisplayName("Логин")]
         public string Login { get; set; }
         [DisplayName("Почта")]

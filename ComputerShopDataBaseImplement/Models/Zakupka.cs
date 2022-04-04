@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ComputerShopContracts.ViewModels
+namespace ComputerShopDataBaseImplement.Models
 {
-    public class ZakupkaViewModel
+    public class Zakupka
     {
         public int Id { get; set; }
-        [DisplayName("Дата закупки")]
+        [Required]
         public DateTime DateBuy { get; set; }
-        [DisplayName("Название закупки")]
+        [Required]
         public string ZakupkaName { get; set; }
-        public string SborkaName { get; set; }
         public int SborkaId { get; set; }
+        public virtual Sborka sborka { get; set; }
+        
     }
 }

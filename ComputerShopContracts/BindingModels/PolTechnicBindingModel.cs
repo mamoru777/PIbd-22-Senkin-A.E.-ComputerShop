@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ComputerShopContracts.BindingModels
 {
-    public class ComplectBindingModel
+    public class PolTechnicBindingModel
     {
         public int? Id { get; set; }
-        public string ComplectName { get; set; }
-        public decimal Price { get; set; }
-        public int PostavshikId { get; set; }
+        public DateTime DatePos { get; set; }
+        public int PostavkaId { get; set; }
+        public string PolTechnicName { get; set; }
     }
 }
