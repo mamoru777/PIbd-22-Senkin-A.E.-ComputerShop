@@ -8,4 +8,8 @@
     <ProjectReference Include="..\ComputerShopContracts\ComputerShopContracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BuisnessLogic\OfficePackage\Implements\" />
+  </ItemGroup>
+
 </Project>

@@ -40,7 +40,7 @@ namespace ComputerShopView
         {
             _logicZ.CreateOrUpdate(new ZakupkaBindingModel
             {
-                SborkaId = Convert.ToInt32(comboBoxComplect.SelectedValue),
+                ComplectId = Convert.ToInt32(comboBoxComplect.SelectedValue),
                 DateBuy = Convert.ToDateTime(textBox1.Text)
 
             });

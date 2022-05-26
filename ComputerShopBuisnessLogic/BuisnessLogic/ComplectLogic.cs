@@ -33,6 +33,8 @@ namespace ComputerShopBuisnessLogic.BuisnessLogic
         }
         public void CreateOrUpdate(ComplectBindingModel model)
         {
+
+            
             var element = _complectStorage.GetElement(new ComplectBindingModel { ComplectName = model.ComplectName });
             if (element != null && element.Id != model.Id)
             {

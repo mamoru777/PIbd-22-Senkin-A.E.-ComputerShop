@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<ZakupkaViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.Zakupkas.Include(rec => rec.sborka).Select(CreateModel).ToList();
+            return context.Zakupkas.Include(rec => rec.complect).Select(CreateModel).ToList();
         }
 
         public List<ZakupkaViewModel> GetFilteredList(ZakupkaBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Zakupkas.Include(rec => rec.sborka).Where(rec => rec.ZakupkaName.Contains(model.ZakupkaName)).Select(CreateModel).ToList();
+            return context.Zakupkas.Include(rec => rec.complect).Where(rec => rec.ZakupkaName.Contains(model.ZakupkaName)).Select(CreateModel).ToList();
         }
 
         public ZakupkaViewModel GetElement(ZakupkaBindingModel model)
@@ -37,7 +37,7 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var Zakupka = context.Zakupkas.Include(rec => rec.sborka).FirstOrDefault(rec => rec.ZakupkaName == model.ZakupkaName || rec.Id == model.Id);
+            var Zakupka = context.Zakupkas.Include(rec => rec.complect).FirstOrDefault(rec => rec.ZakupkaName == model.ZakupkaName || rec.Id == model.Id);
             return Zakupka != null ? CreateModel(Zakupka) : null;
         }
 
@@ -100,8 +100,7 @@ namespace ComputerShopDataBaseImplement.Implements
 
         private static Zakupka CreateModel(ZakupkaBindingModel model, Zakupka Zakupka)
         {
-
-            Zakupka.SborkaId = model.SborkaId;
+            Zakupka.ComplectId = model.ComplectId;
             Zakupka.ZakupkaName = model.ZakupkaName;
             Zakupka.DateBuy = model.DateBuy;
             return Zakupka;
@@ -111,7 +110,7 @@ namespace ComputerShopDataBaseImplement.Implements
             return new ZakupkaViewModel
             {
                 Id = Zakupka.Id,
-                SborkaId = Zakupka.SborkaId,
+                ComplectId = Zakupka.ComplectId,
                 ZakupkaName = Zakupka.ZakupkaName,
                 DateBuy = Zakupka.DateBuy
             };

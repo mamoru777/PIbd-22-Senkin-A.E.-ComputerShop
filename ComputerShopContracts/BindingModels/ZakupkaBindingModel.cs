@@ -11,6 +11,6 @@ namespace ComputerShopContracts.BindingModels
         public int? Id { get; set; }
         public DateTime DateBuy { get; set; }
         public string ZakupkaName { get; set; }
-        public int SborkaId { get; set; }
+        public int ComplectId { get; set; }
     }
 }

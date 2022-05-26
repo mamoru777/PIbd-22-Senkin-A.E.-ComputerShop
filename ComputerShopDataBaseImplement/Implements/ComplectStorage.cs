@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<ComplectViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.Complects.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.sborka).Include(rec => rec.postavshik).Select(CreateModel).ToList();
+            return context.Complects.Include(rec => rec.sborka).Include(rec => rec.postavshik).Select(CreateModel).ToList();
         }
 
         public List<ComplectViewModel> GetFilteredList(ComplectBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Complects.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.sborka).Include(rec => rec.postavshik).Where(rec => rec.ComplectName.Contains(model.ComplectName)).Select(CreateModel).ToList();
+            return context.Complects.Include(rec => rec.sborka).Include(rec => rec.postavshik).Where(rec => (model.PostavshikId == rec.PostavshikId)/*rec => rec.ComplectName.Contains(model.ComplectName)*/).Select(CreateModel).ToList();
         }
 
         public ComplectViewModel GetElement(ComplectBindingModel model)
@@ -37,7 +37,7 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var complect = context.Complects.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.sborka).Include(rec => rec.postavshik).FirstOrDefault(rec => rec.ComplectName == model.ComplectName || rec.Id == model.Id);
+            var complect = context.Complects.Include(rec => rec.sborka).Include(rec => rec.postavshik).FirstOrDefault(rec => rec.ComplectName == model.ComplectName || rec.Id == model.Id);
             return complect != null ? CreateModel(complect) : null;
         }
 
@@ -101,9 +101,10 @@ namespace ComputerShopDataBaseImplement.Implements
         private static Complect CreateModel(ComplectBindingModel model, Complect complect)
         {
 
-            complect.PostavshikId = model.PostavshikId;
+            complect.PostavshikId = (int)model.PostavshikId;
             complect.ComplectName = model.ComplectName;
             complect.Price = model.Price;
+            //model.postavshik.Complects.Add(model);
             return complect;
         }
         private static ComplectViewModel CreateModel(Complect complect)

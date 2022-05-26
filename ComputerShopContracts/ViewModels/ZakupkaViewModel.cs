@@ -15,6 +15,6 @@ namespace ComputerShopContracts.ViewModels
         [DisplayName("Название закупки")]
         public string ZakupkaName { get; set; }
         public string SborkaName { get; set; }
-        public int SborkaId { get; set; }
+        public int ComplectId { get; set; }
     }
 }

@@ -14,13 +14,12 @@ namespace ComputerShopDataBaseImplement
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=localhost\SQLEXPRESS;Initial Catalog=SecureSystemDatabase;Integrated Security=True;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer(@"Data Source=localhost\SQLEXPRESS;Initial Catalog=ComputerShopDatabase;Integrated Security=True;MultipleActiveResultSets=True;");
             }
             base.OnConfiguring(optionsBuilder);
         }
         public virtual DbSet<Complect> Complects { set; get; }
         public virtual DbSet<Sborka> Sborkas { set; get; }
-        public virtual DbSet<SborkaComplect> SborkaComplects { set; get; }
         public virtual DbSet<Zakupka> Zakupkas { set; get; }
         public virtual DbSet<PolTechnic> PolTechnics { set; get; }
         public virtual DbSet<Postavka> Postavkas { set; get; }

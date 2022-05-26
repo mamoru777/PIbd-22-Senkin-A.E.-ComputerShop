@@ -1,0 +1,95 @@
+﻿@using ComputerShopContracts.ViewModels
+@{
+    ViewData["Title"] = "CreateSborka";
+    ViewData["Title"] = "Complect";
+}
+@model List<ComplectViewModel>
+
+<div class="text-center">
+    <h2 class="display-4">Создание сборки</h2>
+</div>
+<form method="post">
+    <div class="row">
+        <div class="col-4">Название сборки:</div>
+        <div class="col-8"><input type="text" name="count" id="count" /></div>
+    </div>
+    <div class="row">
+        <div class="col-4">Цена:</div>
+        <div class="col-8">
+            <input type="text" id="sum" name="sum" readonly="readonly" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Комплектующее:</div>
+        <div class="col-8">
+            <select id="complect" name="complect" class="form-control" asp-items="@(new SelectList(@ViewBag.Complects,"Id", "ComplectName"))"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Добавить" class="btn btnprimary" /></div>
+    </div>
+    <div class="text-center">
+        @{
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Номер
+                        </th>
+                        <th>
+                            Комплектующее
+                        </th>
+                        <th>
+                            Цена
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ComplectName)
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Создать" class="btn btnprimary" /></div>
+    </div>
+
+</form>
+<script>
+    $('#complect').on('change', function () {
+        check();
+    });
+    $('#sum').on('change', function () {
+        check();
+    });
+    function check() {
+        var sum = $('#sum').val();
+        var complect = $('#complect').val();
+        if (sum && complect) {
+            $.ajax({
+                method: "POST",
+                url: "/Home/Calc",
+                data: { sum: sum, complect: complect },
+                success: function (result) {
+                    $("#sum").val(result);
+                }
+            });
+        };
+    }
+</script>

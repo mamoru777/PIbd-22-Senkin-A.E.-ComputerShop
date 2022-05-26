@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<SborkaViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.Sborkas.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.complect).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Select(CreateModel).ToList();
+            return context.Sborkas.Include(rec => rec.Complects).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Select(CreateModel).ToList();
         }
 
         public List<SborkaViewModel> GetFilteredList(SborkaBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Sborkas.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.sborka).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Where(rec => rec.SborkaName.Contains(model.SborkaName)).Select(CreateModel).ToList();
+            return context.Sborkas.Include(rec => rec.Complects).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Where(rec => model.PostavshikId == rec.PostavshikId/*rec.SborkaName.Contains(model.SborkaName)*/).Select(CreateModel).ToList();
         }
 
         public SborkaViewModel GetElement(SborkaBindingModel model)
@@ -37,7 +37,7 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var Sborka = context.Sborkas.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.sborka).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).FirstOrDefault(rec => rec.SborkaName == model.SborkaName || rec.Id == model.Id);
+            var Sborka = context.Sborkas.Include(rec => rec.Complects).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).FirstOrDefault(rec => rec.SborkaName == model.SborkaName || rec.Id == model.Id);
             return Sborka != null ? CreateModel(Sborka) : null;
         }
 

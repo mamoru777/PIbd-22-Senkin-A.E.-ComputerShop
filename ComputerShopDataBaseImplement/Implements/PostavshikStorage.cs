@@ -7,6 +7,7 @@ using ComputerShopContracts.BindingModels;
 using ComputerShopContracts.StorageContracts;
 using ComputerShopContracts.ViewModels;
 using ComputerShopDataBaseImplement.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComputerShopDataBaseImplement.Implements
 {
@@ -25,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Postavshiks.Where(rec => rec.Mail == model.Mail && rec.Password == model.Password).Select(CreateModel).ToList();
+            return context.Postavshiks.Include(rec => rec.Sborkas).Include(rec => rec.Complects).Where(rec => rec.Mail == model.Mail && rec.Password == model.Password).Select(CreateModel).ToList();
         }
         public PostavshikViewModel GetElement(PostavshikBindingModel model)
         {
@@ -34,7 +35,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            var postavshik = context.Postavshiks.FirstOrDefault(rec => rec.Mail == model.Mail || rec.Id == model.Id);
+            var postavshik = context.Postavshiks.Include(rec => rec.Sborkas).Include(rec => rec.Complects).FirstOrDefault(rec => rec.Mail == model.Mail || rec.Id == model.Id);
             return postavshik != null ? CreateModel(postavshik) : null;
         }
         public void Insert(PostavshikBindingModel model)

@@ -17,10 +17,13 @@ namespace ComputerShopDataBaseImplement.Models
         [Required]
         public decimal Price { get; set; }
         public int PostavshikId { get; set; }
-
-        [ForeignKey("ComplectId")]
-        public virtual List<SborkaComplect> SborkaComplect { get; set; }
+        public int SborkaId { get; set; }
+        public int ZakupkaId { get; set; }
         
+        [ForeignKey("ComplectId")]
+        public virtual Zakupka zakupka { get; set; }
+
         public virtual Postavshik postavshik { get; set; }
+        public virtual Sborka sborka { get; set; }
     }
 }
