@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<PostavkaViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.Postavkas.Include(rec => rec.PostavkaZaiavkas).ThenInclude(rec => rec.zaiavka).Select(CreateModel).ToList();
+            return context.Postavkas.Include(rec => rec.zakupka).Select(CreateModel).ToList();
         }
 
         public List<PostavkaViewModel> GetFilteredList(PostavkaBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Postavkas.Include(rec => rec.PostavkaZaiavkas).ThenInclude(rec => rec.zaiavka).Where(rec => rec.PostavkaName.Contains(model.PostavkaName)).Select(CreateModel).ToList();
+            return context.Postavkas.Include(rec => rec.zakupka).Where(rec => rec.PostavkaName.Contains(model.PostavkaName)).Select(CreateModel).ToList();
         }
 
         public PostavkaViewModel GetElement(PostavkaBindingModel model)
@@ -37,7 +37,7 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var Postavka = context.Postavkas.Include(rec => rec.PostavkaZaiavkas).ThenInclude(rec => rec.zaiavka).FirstOrDefault(rec => rec.PostavkaName == model.PostavkaName || rec.Id == model.Id);
+            var Postavka = context.Postavkas.Include(rec => rec.zakupka).FirstOrDefault(rec => rec.PostavkaName == model.PostavkaName || rec.Id == model.Id);
             return Postavka != null ? CreateModel(Postavka) : null;
         }
 

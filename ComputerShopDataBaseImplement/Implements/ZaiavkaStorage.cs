@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<ZaiavkaViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.Zaiavkas.Include(rec => rec.SborkaZaiavka).ThenInclude(rec => rec.sborka).Include(rec => rec.PostavkaZaiavkas).ThenInclude(rec => rec.postavka).Select(CreateModel).ToList();
+            return context.Zaiavkas.Include(rec => rec.SborkaZaiavka).ThenInclude(rec => rec.sborka).Select(CreateModel).ToList();
         }
 
         public List<ZaiavkaViewModel> GetFilteredList(ZaiavkaBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Zaiavkas.Include(rec => rec.SborkaZaiavka).ThenInclude(rec => rec.sborka).Include(rec => rec.PostavkaZaiavkas).ThenInclude(rec => rec.postavka).Where(rec => rec.ZaiavkaName.Contains(model.ZaiavkaName)).Select(CreateModel).ToList();
+            return context.Zaiavkas.Include(rec => rec.SborkaZaiavka).ThenInclude(rec => rec.sborka).Where(rec => rec.ZaiavkaName.Contains(model.ZaiavkaName)).Select(CreateModel).ToList();
         }
 
         public ZaiavkaViewModel GetElement(ZaiavkaBindingModel model)
@@ -37,7 +37,7 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var Zaiavka = context.Zaiavkas.Include(rec => rec.SborkaZaiavka).ThenInclude(rec => rec.sborka).Include(rec => rec.PostavkaZaiavkas).ThenInclude(rec => rec.postavka).FirstOrDefault(rec => rec.ZaiavkaName == model.ZaiavkaName || rec.Id == model.Id);
+            var Zaiavka = context.Zaiavkas.Include(rec => rec.SborkaZaiavka).ThenInclude(rec => rec.sborka).FirstOrDefault(rec => rec.ZaiavkaName == model.ZaiavkaName || rec.Id == model.Id);
             return Zaiavka != null ? CreateModel(Zaiavka) : null;
         }
 
@@ -47,9 +47,10 @@ namespace ComputerShopDataBaseImplement.Implements
             using var transaction = Zaiavka.Database.BeginTransaction();
             try
             {
-                Zaiavka.Zaiavkas.Add(CreateModel(model, new Zaiavka()));
+                Zaiavka.Zaiavkas.Add(CreateModel(model, new Zaiavka(), Zaiavka));
                 Zaiavka.SaveChanges();
                 transaction.Commit();
+
             }
             catch
             {
@@ -71,7 +72,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 {
                     throw new Exception("Элемент не найден");
                 }
-                CreateModel(model, element);
+                CreateModel(model, element, Zaiavka);
                 Zaiavka.SaveChanges();
                 transaction.Commit();
             }
@@ -98,10 +99,28 @@ namespace ComputerShopDataBaseImplement.Implements
             }
         }
 
-        private static Zaiavka CreateModel(ZaiavkaBindingModel model, Zaiavka Zaiavka)
+        private static Zaiavka CreateModel(ZaiavkaBindingModel model, Zaiavka Zaiavka, ComputerShopDataBase context)
         {
 
             Zaiavka.ZaiavkaName = model.ZaiavkaName;
+            if (model.Id.HasValue)
+            {
+                var sborkaZaiavka = context.SborkaZaiavkas.Where(rec => rec.ZaiavkaId == model.Id.Value).ToList();
+                context.SborkaZaiavkas.RemoveRange(sborkaZaiavka);
+                /*var learningPlanStudents = context.LearningPlanStudents.Where(rec => rec.LearningPlanId == model.Id.Value).ToList();
+                context.LearningPlanStudents.RemoveRange(learningPlanStudents);
+                context.SaveChanges();*/
+            }
+            // добавили новые
+            foreach (var t in model.SborkaZaiavka)
+            {
+                context.SborkaZaiavkas.Add(new SborkaZaiavka
+                {
+                    SborkaId = Convert.ToInt32(Zaiavka.Id),
+                    ZaiavkaId = t.Key
+                });
+                context.SaveChanges();
+            }
             return Zaiavka;
         }
         private static ZaiavkaViewModel CreateModel(Zaiavka Zaiavka)
@@ -109,7 +128,8 @@ namespace ComputerShopDataBaseImplement.Implements
             return new ZaiavkaViewModel
             {
                 Id = Zaiavka.Id,
-                ZaiavkaName = Zaiavka.ZaiavkaName
+                ZaiavkaName = Zaiavka.ZaiavkaName,
+                SborkaZaiavka = Zaiavka.SborkaZaiavka.ToDictionary(recCLP => recCLP.SborkaId, recCLP => (recCLP.sborka?.SborkaName))
             };
         }
     }

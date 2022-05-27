@@ -1,27 +1,22 @@
 ﻿@using ComputerShopContracts.ViewModels
 @{
-    ViewData["Title"] = "CreateSborka";
-    //ViewData["Title"] = "Complect";
+    ViewData["Title"] = "CreatePoltechnic";
 }
 @model List<ComplectViewModel>
 
 <div class="text-center">
-    <h2 class="display-4">Создание сборки</h2>
+    <h2 class="display-4">Создание получения техники</h2>
 </div>
 <form method="post">
     <div class="row">
-        <div class="col-4">Название сборки:</div>
-        <div class="col-8"><input type="text" name="sborkaname" id="sborkaname" /></div>
+        <div class="col-4">Название:</div>
+        <div class="col-8"><input type="text" name="poltechnicname" id="poltechnicname" /></div>
     </div>
     <div class="row">
-        <div class="col-4">Цена:</div>
+        <div class="col-4">Дата получения:</div>
         <div class="col-8">
-            <input type="text" id="sum" name="sum"/>
+            <input type="datetime" id="datepos" name="datepos" />
         </div>
-    </div>
-    <div class="row">
-        <div class="col-4">Количество:</div>
-        <div class="col-8"><input type="text" name="count" id="count" /></div>
     </div>
     <div class="row">
         <div class="col-4">Комплектующее:</div>

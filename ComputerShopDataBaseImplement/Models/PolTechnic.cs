@@ -15,6 +15,7 @@ namespace ComputerShopDataBaseImplement.Models
         public DateTime DatePos { get; set; }
         public int PostavkaId {get; set;}
         public string PolTechnicName { get; set; }
-        public virtual Postavka postavka { get; set; }
+        [ForeignKey("PolTechnicId")]
+        public virtual List<ComplectPolTechnic> ComplectPolTechnic { get; set; }
     }
 }

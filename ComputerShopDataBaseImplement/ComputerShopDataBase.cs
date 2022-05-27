@@ -25,8 +25,9 @@ namespace ComputerShopDataBaseImplement
         public virtual DbSet<Postavka> Postavkas { set; get; }
         public virtual DbSet<Zaiavka> Zaiavkas { set; get; }
         public virtual DbSet<Postavshik> Postavshiks { set; get; }
-        public virtual DbSet<PostavkaZaiavka> PostavkaZaiavkas { set; get; }
         public virtual DbSet<SborkaZaiavka> SborkaZaiavkas { set; get; }
+        public virtual DbSet<SborkaComplect> SborkaComplects { set; get; }
+        public virtual DbSet<ComplectPolTechnic> ComplectPolTechnics { set; get; }
 
     }
 

@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<ZakupkaViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.Zakupkas.Include(rec => rec.complect).Select(CreateModel).ToList();
+            return context.Zakupkas.Include(rec => rec.postavka).Include(rec => rec.postavshik).Include(rec => rec.complect).Select(CreateModel).ToList();
         }
 
         public List<ZakupkaViewModel> GetFilteredList(ZakupkaBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Zakupkas.Include(rec => rec.complect).Where(rec => rec.ZakupkaName.Contains(model.ZakupkaName)).Select(CreateModel).ToList();
+            return context.Zakupkas.Include(rec => rec.postavka).Include(rec => rec.postavshik).Include(rec => rec.complect).Where( rec => model.PostavshikId == rec.PostavshikId /*rec => rec.ZakupkaName.Contains(model.ZakupkaName)*/).Select(CreateModel).ToList();
         }
 
         public ZakupkaViewModel GetElement(ZakupkaBindingModel model)
@@ -37,7 +37,7 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var Zakupka = context.Zakupkas.Include(rec => rec.complect).FirstOrDefault(rec => rec.ZakupkaName == model.ZakupkaName || rec.Id == model.Id);
+            var Zakupka = context.Zakupkas.Include(rec => rec.postavka).Include(rec => rec.postavshik).Include(rec => rec.complect).FirstOrDefault(rec => rec.ZakupkaName == model.ZakupkaName || rec.Id == model.Id);
             return Zakupka != null ? CreateModel(Zakupka) : null;
         }
 
@@ -100,6 +100,7 @@ namespace ComputerShopDataBaseImplement.Implements
 
         private static Zakupka CreateModel(ZakupkaBindingModel model, Zakupka Zakupka)
         {
+            Zakupka.PostavshikId = model.PostavshikId;
             Zakupka.ComplectId = model.ComplectId;
             Zakupka.ZakupkaName = model.ZakupkaName;
             Zakupka.DateBuy = model.DateBuy;
@@ -111,6 +112,7 @@ namespace ComputerShopDataBaseImplement.Implements
             {
                 Id = Zakupka.Id,
                 ComplectId = Zakupka.ComplectId,
+                PostavshikId = Zakupka.PostavshikId,
                 ZakupkaName = Zakupka.ZakupkaName,
                 DateBuy = Zakupka.DateBuy
             };

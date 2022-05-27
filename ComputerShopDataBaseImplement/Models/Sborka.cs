@@ -16,8 +16,8 @@ namespace ComputerShopDataBaseImplement.Models
         [Required]
         public decimal Sum { get; set; }
         [ForeignKey("SborkaId")]
-        public virtual List<Complect> Complects { get; set; }
-       
+        public virtual List<SborkaComplect> SborkaComplect { get; set; }
+
         [ForeignKey("SborkaId")]
         public virtual List<SborkaZaiavka> SborkaZaiavkas { get; set; }
         public virtual Postavshik postavshik { get; set; }

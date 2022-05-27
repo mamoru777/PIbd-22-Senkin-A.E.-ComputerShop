@@ -3,19 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerShopView", "ComputerShop\ComputerShopView.csproj", "{B112A707-5801-42F7-A352-DA470E52AEEF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerShopContracts", "ComputerShopContracts\ComputerShopContracts.csproj", "{88707B34-2270-40B1-8264-81F3E87BA521}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerShopBuisnessLogic", "ComputerShopBuisnessLogic\ComputerShopBuisnessLogic.csproj", "{27FE22C4-1B2B-4636-9283-55D200624463}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerShopListImplement", "ComputerShopListImplement\ComputerShopListImplement.csproj", "{B844BC72-1A17-4C55-8DAE-2634899D6F47}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerShopDataBaseImplement", "ComputerShopDataBaseImplement\ComputerShopDataBaseImplement.csproj", "{85F10876-7158-4D2F-A9D8-427A58C81562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerShopRestApi", "ComputerShopRestApi\ComputerShopRestApi.csproj", "{E7140DB1-95CE-453C-88CA-86FA8DD8430D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerShopRestApi", "ComputerShopRestApi\ComputerShopRestApi.csproj", "{E7140DB1-95CE-453C-88CA-86FA8DD8430D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerShopPostavhikApp", "ComputerShopPostavhikApp\ComputerShopPostavhikApp.csproj", "{B0E8F804-DB38-47EA-9FD0-24BB6BF6A6F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputerShopPostavhikApp", "ComputerShopPostavhikApp\ComputerShopPostavhikApp.csproj", "{B0E8F804-DB38-47EA-9FD0-24BB6BF6A6F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B112A707-5801-42F7-A352-DA470E52AEEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B112A707-5801-42F7-A352-DA470E52AEEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B112A707-5801-42F7-A352-DA470E52AEEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B112A707-5801-42F7-A352-DA470E52AEEF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88707B34-2270-40B1-8264-81F3E87BA521}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88707B34-2270-40B1-8264-81F3E87BA521}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88707B34-2270-40B1-8264-81F3E87BA521}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,10 +27,6 @@ Global
 		{27FE22C4-1B2B-4636-9283-55D200624463}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27FE22C4-1B2B-4636-9283-55D200624463}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27FE22C4-1B2B-4636-9283-55D200624463}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B844BC72-1A17-4C55-8DAE-2634899D6F47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B844BC72-1A17-4C55-8DAE-2634899D6F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B844BC72-1A17-4C55-8DAE-2634899D6F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B844BC72-1A17-4C55-8DAE-2634899D6F47}.Release|Any CPU.Build.0 = Release|Any CPU
 		{85F10876-7158-4D2F-A9D8-427A58C81562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85F10876-7158-4D2F-A9D8-427A58C81562}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85F10876-7158-4D2F-A9D8-427A58C81562}.Release|Any CPU.ActiveCfg = Release|Any CPU

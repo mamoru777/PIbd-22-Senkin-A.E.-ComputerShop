@@ -16,5 +16,6 @@ namespace ComputerShopContracts.ViewModels
         public string ZakupkaName { get; set; }
         public string SborkaName { get; set; }
         public int ComplectId { get; set; }
+        public int PostavshikId { get; set; }
     }
 }

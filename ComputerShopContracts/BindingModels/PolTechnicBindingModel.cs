@@ -12,5 +12,6 @@ namespace ComputerShopContracts.BindingModels
         public DateTime DatePos { get; set; }
         public int PostavkaId { get; set; }
         public string PolTechnicName { get; set; }
+        public Dictionary<int, string> ComplectPolTechnic { get; set; }
     }
 }

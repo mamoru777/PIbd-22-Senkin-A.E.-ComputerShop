@@ -15,9 +15,13 @@ namespace ComputerShopDataBaseImplement.Models
         public DateTime DateBuy { get; set; }
         [Required]
         public string ZakupkaName { get; set; }
+        public int PostavshikId { get; set; }
         public int ComplectId { get; set; }
-        [ForeignKey("ZakupkaId")]
         public virtual Complect complect { get; set; }
-        
+        public virtual Postavshik postavshik { get; set; }
+
+        [ForeignKey("ZakupkaId")]
+        public virtual Postavka postavka { get; set; }
+
     }
 }

@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<PolTechnicViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.PolTechnics.Include(rec => rec.postavka).Select(CreateModel).ToList();
+            return context.PolTechnics.Include(rec => rec.ComplectPolTechnic).ThenInclude(rec => rec.complect).Select(CreateModel).ToList();
         }
 
         public List<PolTechnicViewModel> GetFilteredList(PolTechnicBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.PolTechnics.Include(rec => rec.postavka).Where(rec => rec.PolTechnicName.Contains(model.PolTechnicName)).Select(CreateModel).ToList();
+            return context.PolTechnics.Include(rec => rec.ComplectPolTechnic).ThenInclude(rec => rec.complect).Where(rec => rec.PolTechnicName.Contains(model.PolTechnicName)).Select(CreateModel).ToList();
         }
 
         public PolTechnicViewModel GetElement(PolTechnicBindingModel model)
@@ -37,7 +37,7 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var PolTechnic = context.PolTechnics.Include(rec => rec.postavka).FirstOrDefault(rec => rec.PolTechnicName == model.PolTechnicName || rec.Id == model.Id);
+            var PolTechnic = context.PolTechnics.Include(rec => rec.ComplectPolTechnic).ThenInclude(rec => rec.complect).FirstOrDefault(rec => rec.PolTechnicName == model.PolTechnicName || rec.Id == model.Id);
             return PolTechnic != null ? CreateModel(PolTechnic) : null;
         }
 
@@ -47,7 +47,7 @@ namespace ComputerShopDataBaseImplement.Implements
             using var transaction = PolTechnic.Database.BeginTransaction();
             try
             {
-                PolTechnic.PolTechnics.Add(CreateModel(model, new PolTechnic()));
+                PolTechnic.PolTechnics.Add(CreateModel(model, new PolTechnic(), PolTechnic));
                 PolTechnic.SaveChanges();
                 transaction.Commit();
             }
@@ -71,7 +71,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 {
                     throw new Exception("Элемент не найден");
                 }
-                CreateModel(model, element);
+                CreateModel(model, element, PolTechnic);
                 PolTechnic.SaveChanges();
                 transaction.Commit();
             }
@@ -98,12 +98,30 @@ namespace ComputerShopDataBaseImplement.Implements
             }
         }
 
-        private static PolTechnic CreateModel(PolTechnicBindingModel model, PolTechnic PolTechnic)
+        private static PolTechnic CreateModel(PolTechnicBindingModel model, PolTechnic PolTechnic, ComputerShopDataBase context)
         {
 
             PolTechnic.PostavkaId = model.PostavkaId;
             PolTechnic.PolTechnicName = model.PolTechnicName;
             PolTechnic.DatePos = model.DatePos;
+            if (model.Id.HasValue)
+            {
+                var complectPolTechnic = context.ComplectPolTechnics.Where(rec => rec.PolTechnicId == model.Id.Value).ToList();
+                context.ComplectPolTechnics.RemoveRange(complectPolTechnic);
+                /*var learningPlanStudents = context.LearningPlanStudents.Where(rec => rec.LearningPlanId == model.Id.Value).ToList();
+                context.LearningPlanStudents.RemoveRange(learningPlanStudents);
+                context.SaveChanges();*/
+            }
+            // добавили новые
+            foreach (var t in model.ComplectPolTechnic)
+            {
+                context.ComplectPolTechnics.Add(new ComplectPolTechnic
+                {
+                    ComplectId = Convert.ToInt32(PolTechnic.Id),
+                    PolTechnicId = t.Key
+                });
+                context.SaveChanges();
+            }
             return PolTechnic;
         }
         private static PolTechnicViewModel CreateModel(PolTechnic PolTechnic)
@@ -113,7 +131,8 @@ namespace ComputerShopDataBaseImplement.Implements
                 Id = PolTechnic.Id,
                 PostavkaId = PolTechnic.PostavkaId,
                 PolTechnicName = PolTechnic.PolTechnicName,
-                DatePos = PolTechnic.DatePos
+                DatePos = PolTechnic.DatePos,
+                ComplectPolTechnic = PolTechnic.ComplectPolTechnic.ToDictionary(recCLP => recCLP.ComplectId, recCLP => (recCLP.complect?.ComplectName))
             };
         }
     }

@@ -16,7 +16,7 @@ namespace ComputerShopDataBaseImplement.Implements
         public List<SborkaViewModel> GetFullList()
         {
             using var context = new ComputerShopDataBase();
-            return context.Sborkas.Include(rec => rec.Complects).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Select(CreateModel).ToList();
+            return context.Sborkas.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.complect).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Select(CreateModel).ToList();
         }
 
         public List<SborkaViewModel> GetFilteredList(SborkaBindingModel model)
@@ -26,7 +26,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 return null;
             }
             using var context = new ComputerShopDataBase();
-            return context.Sborkas.Include(rec => rec.Complects).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Where(rec => model.PostavshikId == rec.PostavshikId/*rec.SborkaName.Contains(model.SborkaName)*/).Select(CreateModel).ToList();
+            return context.Sborkas.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.complect).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).Where(rec => model.PostavshikId == rec.PostavshikId/*rec.SborkaName.Contains(model.SborkaName)*/).Select(CreateModel).ToList();
         }
 
         public SborkaViewModel GetElement(SborkaBindingModel model)
@@ -37,18 +37,19 @@ namespace ComputerShopDataBaseImplement.Implements
             }
 
             using var context = new ComputerShopDataBase();
-            var Sborka = context.Sborkas.Include(rec => rec.Complects).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).FirstOrDefault(rec => rec.SborkaName == model.SborkaName || rec.Id == model.Id);
+            var Sborka = context.Sborkas.Include(rec => rec.SborkaComplect).ThenInclude(rec => rec.complect).Include(rec => rec.SborkaZaiavkas).ThenInclude(rec => rec.zaiavka).Include(rec => rec.postavshik).FirstOrDefault(rec => rec.SborkaName == model.SborkaName || rec.Id == model.Id);
             return Sborka != null ? CreateModel(Sborka) : null;
         }
 
         public void Insert(SborkaBindingModel model)
         {
-            using var Sborka = new ComputerShopDataBase();
-            using var transaction = Sborka.Database.BeginTransaction();
+            using var context = new ComputerShopDataBase();
+            using var transaction = context.Database.BeginTransaction();
+
             try
             {
-                Sborka.Sborkas.Add(CreateModel(model, new Sborka()));
-                Sborka.SaveChanges();
+                context.Sborkas.Add(CreateModel(model, new Sborka(), context));
+                context.SaveChanges();
                 transaction.Commit();
             }
             catch
@@ -71,7 +72,7 @@ namespace ComputerShopDataBaseImplement.Implements
                 {
                     throw new Exception("Элемент не найден");
                 }
-                CreateModel(model, element);
+                CreateModel(model, element, Sborka);
                 Sborka.SaveChanges();
                 transaction.Commit();
             }
@@ -98,12 +99,30 @@ namespace ComputerShopDataBaseImplement.Implements
             }
         }
 
-        private static Sborka CreateModel(SborkaBindingModel model, Sborka Sborka)
+        private static Sborka CreateModel(SborkaBindingModel model, Sborka Sborka, ComputerShopDataBase context)
         {
 
             Sborka.PostavshikId = model.PostavshikId;
             Sborka.SborkaName = model.SborkaName;
             Sborka.Sum = model.Sum;
+            if (model.Id.HasValue)
+            {
+                var sborkaComplect = context.SborkaComplects.Where(rec => rec.SborkaId == model.Id.Value).ToList();
+                context.SborkaComplects.RemoveRange(sborkaComplect);
+                /*var learningPlanStudents = context.LearningPlanStudents.Where(rec => rec.LearningPlanId == model.Id.Value).ToList();
+                context.LearningPlanStudents.RemoveRange(learningPlanStudents);
+                context.SaveChanges();*/
+            }
+            // добавили новые
+            foreach (var t in model.SborkaComplect)
+            {
+                context.SborkaComplects.Add(new SborkaComplect
+                {
+                    ComplectId = Sborka.Id,
+                    SborkaId = t.Key
+                });
+                context.SaveChanges();
+            }
             return Sborka;
         }
         private static SborkaViewModel CreateModel(Sborka Sborka)
@@ -113,7 +132,8 @@ namespace ComputerShopDataBaseImplement.Implements
                 Id = Sborka.Id,
                 PostavshikId = Sborka.PostavshikId,
                 SborkaName = Sborka.SborkaName,
-                Sum = Sborka.Sum
+                Sum = Sborka.Sum,
+                SborkaComplect = Sborka.SborkaComplect.ToDictionary(recCLP => recCLP.ComplectId, recCLP => (recCLP.complect?.ComplectName))
             };
         }
     }

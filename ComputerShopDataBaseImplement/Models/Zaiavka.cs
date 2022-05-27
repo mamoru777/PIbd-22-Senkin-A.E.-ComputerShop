@@ -13,8 +13,6 @@ namespace ComputerShopDataBaseImplement.Models
         public int? Id { get; set; }
         public string ZaiavkaName { get; set; }
         [ForeignKey("ZaiavkaId")]
-        public virtual List<PostavkaZaiavka> PostavkaZaiavkas { get; set; }
-        [ForeignKey("ZaiavkaId")]
         public virtual List<SborkaZaiavka> SborkaZaiavka { get; set; }
     }
 }

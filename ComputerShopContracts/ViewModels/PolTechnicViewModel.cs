@@ -15,5 +15,7 @@ namespace ComputerShopContracts.ViewModels
         [DisplayName("Название поставки")]
         public string PolTechnicName { get; set; }
         public int PostavkaId { get; set; }
+
+        public Dictionary<int, string> ComplectPolTechnic { get; set; }
     }
 }

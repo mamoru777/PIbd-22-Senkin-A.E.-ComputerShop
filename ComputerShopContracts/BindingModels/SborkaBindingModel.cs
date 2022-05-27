@@ -12,6 +12,6 @@ namespace ComputerShopContracts.BindingModels
         public string SborkaName { get; set; }
         public decimal Sum { get; set; }
         public int PostavshikId { get; set; }
-        public Dictionary<int, (string, int)> SborkaComplect { get; set; }
+        public Dictionary<int, string> SborkaComplect { get; set; }
     }
 }

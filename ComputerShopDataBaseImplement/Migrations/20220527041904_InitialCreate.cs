@@ -8,13 +8,29 @@ namespace ComputerShopDataBaseImplement.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "PolTechnics",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DatePos = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PostavkaId = table.Column<int>(type: "int", nullable: false),
+                    PolTechnicName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PolTechnics", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Postavkas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PostavkaName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostavkaCreate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    PostavkaCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ZakupkaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,28 +66,6 @@ namespace ComputerShopDataBaseImplement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PolTechnics",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DatePos = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PostavkaId = table.Column<int>(type: "int", nullable: false),
-                    PolTechnicName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostavlaId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PolTechnics", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PolTechnics_Postavkas_PostavlaId",
-                        column: x => x.PostavlaId,
-                        principalTable: "Postavkas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sborkas",
                 columns: table => new
                 {
@@ -93,29 +87,32 @@ namespace ComputerShopDataBaseImplement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostavkaZaiavkas",
+                name: "Zakupkas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PostavkaId = table.Column<int>(type: "int", nullable: false),
-                    ZaiavkaId = table.Column<int>(type: "int", nullable: false)
+                    DateBuy = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ZakupkaName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostavshikId = table.Column<int>(type: "int", nullable: false),
+                    ComplectId = table.Column<int>(type: "int", nullable: false),
+                    ZakupkaId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostavkaZaiavkas", x => x.Id);
+                    table.PrimaryKey("PK_Zakupkas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PostavkaZaiavkas_Postavkas_PostavkaId",
-                        column: x => x.PostavkaId,
+                        name: "FK_Zakupkas_Postavkas_ZakupkaId",
+                        column: x => x.ZakupkaId,
                         principalTable: "Postavkas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PostavkaZaiavkas_Zaiavkas_ZaiavkaId",
-                        column: x => x.ZaiavkaId,
-                        principalTable: "Zaiavkas",
+                        name: "FK_Zakupkas_Postavshiks_PostavshikId",
+                        column: x => x.PostavshikId,
+                        principalTable: "Postavshiks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,22 +142,6 @@ namespace ComputerShopDataBaseImplement.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Zakupkas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DateBuy = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ZakupkaName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ComplectId = table.Column<int>(type: "int", nullable: false),
-                    ZakupkaId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Zakupkas", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Complects",
                 columns: table => new
                 {
@@ -169,8 +150,6 @@ namespace ComputerShopDataBaseImplement.Migrations
                     ComplectName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PostavshikId = table.Column<int>(type: "int", nullable: false),
-                    SborkaId = table.Column<int>(type: "int", nullable: false),
-                    ZakupkaId = table.Column<int>(type: "int", nullable: false),
                     ComplectId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -183,12 +162,6 @@ namespace ComputerShopDataBaseImplement.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Complects_Sborkas_SborkaId",
-                        column: x => x.SborkaId,
-                        principalTable: "Sborkas",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
                         name: "FK_Complects_Zakupkas_ComplectId",
                         column: x => x.ComplectId,
                         principalTable: "Zakupkas",
@@ -196,10 +169,74 @@ namespace ComputerShopDataBaseImplement.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ComplectPolTechnics",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ComplectId = table.Column<int>(type: "int", nullable: false),
+                    PolTechnicId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComplectPolTechnics", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComplectPolTechnics_Complects_ComplectId",
+                        column: x => x.ComplectId,
+                        principalTable: "Complects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_ComplectPolTechnics_PolTechnics_PolTechnicId",
+                        column: x => x.PolTechnicId,
+                        principalTable: "PolTechnics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SborkaComplects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ComplectId = table.Column<int>(type: "int", nullable: false),
+                    SborkaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SborkaComplects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SborkaComplects_Complects_ComplectId",
+                        column: x => x.ComplectId,
+                        principalTable: "Complects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_SborkaComplects_Sborkas_SborkaId",
+                        column: x => x.SborkaId,
+                        principalTable: "Sborkas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComplectPolTechnics_ComplectId",
+                table: "ComplectPolTechnics",
+                column: "ComplectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComplectPolTechnics_PolTechnicId",
+                table: "ComplectPolTechnics",
+                column: "PolTechnicId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Complects_ComplectId",
                 table: "Complects",
-                column: "ComplectId");
+                column: "ComplectId",
+                unique: true,
+                filter: "[ComplectId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Complects_PostavshikId",
@@ -207,24 +244,14 @@ namespace ComputerShopDataBaseImplement.Migrations
                 column: "PostavshikId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Complects_SborkaId",
-                table: "Complects",
+                name: "IX_SborkaComplects_ComplectId",
+                table: "SborkaComplects",
+                column: "ComplectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SborkaComplects_SborkaId",
+                table: "SborkaComplects",
                 column: "SborkaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PolTechnics_PostavlaId",
-                table: "PolTechnics",
-                column: "PostavlaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostavkaZaiavkas_PostavkaId",
-                table: "PostavkaZaiavkas",
-                column: "PostavkaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostavkaZaiavkas_ZaiavkaId",
-                table: "PostavkaZaiavkas",
-                column: "ZaiavkaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sborkas_PostavshikId",
@@ -242,63 +269,49 @@ namespace ComputerShopDataBaseImplement.Migrations
                 column: "ZaiavkaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Zakupkas_PostavshikId",
+                table: "Zakupkas",
+                column: "PostavshikId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Zakupkas_ZakupkaId",
                 table: "Zakupkas",
-                column: "ZakupkaId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Zakupkas_Complects_ZakupkaId",
-                table: "Zakupkas",
                 column: "ZakupkaId",
-                principalTable: "Complects",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                unique: true,
+                filter: "[ZakupkaId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Complects_Postavshiks_PostavshikId",
-                table: "Complects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Sborkas_Postavshiks_PostavshikId",
-                table: "Sborkas");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Complects_Sborkas_SborkaId",
-                table: "Complects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Complects_Zakupkas_ComplectId",
-                table: "Complects");
+            migrationBuilder.DropTable(
+                name: "ComplectPolTechnics");
 
             migrationBuilder.DropTable(
-                name: "PolTechnics");
-
-            migrationBuilder.DropTable(
-                name: "PostavkaZaiavkas");
+                name: "SborkaComplects");
 
             migrationBuilder.DropTable(
                 name: "SborkaZaiavkas");
 
             migrationBuilder.DropTable(
-                name: "Postavkas");
+                name: "PolTechnics");
 
             migrationBuilder.DropTable(
-                name: "Zaiavkas");
-
-            migrationBuilder.DropTable(
-                name: "Postavshiks");
+                name: "Complects");
 
             migrationBuilder.DropTable(
                 name: "Sborkas");
 
             migrationBuilder.DropTable(
+                name: "Zaiavkas");
+
+            migrationBuilder.DropTable(
                 name: "Zakupkas");
 
             migrationBuilder.DropTable(
-                name: "Complects");
+                name: "Postavkas");
+
+            migrationBuilder.DropTable(
+                name: "Postavshiks");
         }
     }
 }

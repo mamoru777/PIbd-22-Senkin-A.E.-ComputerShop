@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerShopDataBaseImplement.Migrations
 {
     [DbContext(typeof(ComputerShopDataBase))]
-    [Migration("20220526164028_InitialCreate")]
+    [Migration("20220527041904_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace ComputerShopDataBaseImplement.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.15")
+                .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Complect", b =>
@@ -41,21 +41,37 @@ namespace ComputerShopDataBaseImplement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("SborkaId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComplectId")
+                        .IsUnique()
+                        .HasFilter("[ComplectId] IS NOT NULL");
+
+                    b.HasIndex("PostavshikId");
+
+                    b.ToTable("Complects");
+                });
+
+            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.ComplectPolTechnic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ComplectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ZakupkaId")
+                    b.Property<int>("PolTechnicId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ComplectId");
 
-                    b.HasIndex("PostavshikId");
+                    b.HasIndex("PolTechnicId");
 
-                    b.HasIndex("SborkaId");
-
-                    b.ToTable("Complects");
+                    b.ToTable("ComplectPolTechnics");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.PolTechnic", b =>
@@ -74,12 +90,7 @@ namespace ComputerShopDataBaseImplement.Migrations
                     b.Property<int>("PostavkaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PostavlaId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PostavlaId");
 
                     b.ToTable("PolTechnics");
                 });
@@ -97,31 +108,12 @@ namespace ComputerShopDataBaseImplement.Migrations
                     b.Property<string>("PostavkaName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ZakupkaId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Postavkas");
-                });
-
-            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.PostavkaZaiavka", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PostavkaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ZaiavkaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostavkaId");
-
-                    b.HasIndex("ZaiavkaId");
-
-                    b.ToTable("PostavkaZaiavkas");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Postavshik", b =>
@@ -170,6 +162,28 @@ namespace ComputerShopDataBaseImplement.Migrations
                     b.HasIndex("PostavshikId");
 
                     b.ToTable("Sborkas");
+                });
+
+            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.SborkaComplect", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ComplectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SborkaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComplectId");
+
+                    b.HasIndex("SborkaId");
+
+                    b.ToTable("SborkaComplects");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.SborkaZaiavka", b =>
@@ -222,6 +236,9 @@ namespace ComputerShopDataBaseImplement.Migrations
                     b.Property<DateTime>("DateBuy")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PostavshikId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ZakupkaId")
                         .HasColumnType("int");
 
@@ -231,7 +248,11 @@ namespace ComputerShopDataBaseImplement.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ZakupkaId");
+                    b.HasIndex("PostavshikId");
+
+                    b.HasIndex("ZakupkaId")
+                        .IsUnique()
+                        .HasFilter("[ZakupkaId] IS NOT NULL");
 
                     b.ToTable("Zakupkas");
                 });
@@ -239,8 +260,8 @@ namespace ComputerShopDataBaseImplement.Migrations
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Complect", b =>
                 {
                     b.HasOne("ComputerShopDataBaseImplement.Models.Zakupka", "zakupka")
-                        .WithMany()
-                        .HasForeignKey("ComplectId");
+                        .WithOne("complect")
+                        .HasForeignKey("ComputerShopDataBaseImplement.Models.Complect", "ComplectId");
 
                     b.HasOne("ComputerShopDataBaseImplement.Models.Postavshik", "postavshik")
                         .WithMany("Complects")
@@ -248,45 +269,28 @@ namespace ComputerShopDataBaseImplement.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ComputerShopDataBaseImplement.Models.Sborka", "sborka")
-                        .WithMany("Complects")
-                        .HasForeignKey("SborkaId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("postavshik");
-
-                    b.Navigation("sborka");
 
                     b.Navigation("zakupka");
                 });
 
-            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.PolTechnic", b =>
+            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.ComplectPolTechnic", b =>
                 {
-                    b.HasOne("ComputerShopDataBaseImplement.Models.Postavka", "postavka")
-                        .WithMany("poltechnic")
-                        .HasForeignKey("PostavlaId");
-
-                    b.Navigation("postavka");
-                });
-
-            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.PostavkaZaiavka", b =>
-                {
-                    b.HasOne("ComputerShopDataBaseImplement.Models.Postavka", "postavka")
-                        .WithMany("PostavkaZaiavkas")
-                        .HasForeignKey("PostavkaId")
+                    b.HasOne("ComputerShopDataBaseImplement.Models.Complect", "complect")
+                        .WithMany("ComplectPolTechnic")
+                        .HasForeignKey("ComplectId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ComputerShopDataBaseImplement.Models.Zaiavka", "zaiavka")
-                        .WithMany("PostavkaZaiavkas")
-                        .HasForeignKey("ZaiavkaId")
+                    b.HasOne("ComputerShopDataBaseImplement.Models.PolTechnic", "poltechnic")
+                        .WithMany("ComplectPolTechnic")
+                        .HasForeignKey("PolTechnicId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("postavka");
+                    b.Navigation("complect");
 
-                    b.Navigation("zaiavka");
+                    b.Navigation("poltechnic");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Sborka", b =>
@@ -298,6 +302,25 @@ namespace ComputerShopDataBaseImplement.Migrations
                         .IsRequired();
 
                     b.Navigation("postavshik");
+                });
+
+            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.SborkaComplect", b =>
+                {
+                    b.HasOne("ComputerShopDataBaseImplement.Models.Complect", "complect")
+                        .WithMany("SborkaComplect")
+                        .HasForeignKey("ComplectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ComputerShopDataBaseImplement.Models.Sborka", "sborka")
+                        .WithMany("SborkaComplect")
+                        .HasForeignKey("SborkaId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("complect");
+
+                    b.Navigation("sborka");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.SborkaZaiavka", b =>
@@ -321,18 +344,36 @@ namespace ComputerShopDataBaseImplement.Migrations
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Zakupka", b =>
                 {
-                    b.HasOne("ComputerShopDataBaseImplement.Models.Complect", "complect")
-                        .WithMany()
-                        .HasForeignKey("ZakupkaId");
+                    b.HasOne("ComputerShopDataBaseImplement.Models.Postavshik", "postavshik")
+                        .WithMany("Zakupkas")
+                        .HasForeignKey("PostavshikId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("complect");
+                    b.HasOne("ComputerShopDataBaseImplement.Models.Postavka", "postavka")
+                        .WithOne("zakupka")
+                        .HasForeignKey("ComputerShopDataBaseImplement.Models.Zakupka", "ZakupkaId");
+
+                    b.Navigation("postavka");
+
+                    b.Navigation("postavshik");
+                });
+
+            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Complect", b =>
+                {
+                    b.Navigation("ComplectPolTechnic");
+
+                    b.Navigation("SborkaComplect");
+                });
+
+            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.PolTechnic", b =>
+                {
+                    b.Navigation("ComplectPolTechnic");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Postavka", b =>
                 {
-                    b.Navigation("poltechnic");
-
-                    b.Navigation("PostavkaZaiavkas");
+                    b.Navigation("zakupka");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Postavshik", b =>
@@ -340,20 +381,25 @@ namespace ComputerShopDataBaseImplement.Migrations
                     b.Navigation("Complects");
 
                     b.Navigation("Sborkas");
+
+                    b.Navigation("Zakupkas");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Sborka", b =>
                 {
-                    b.Navigation("Complects");
+                    b.Navigation("SborkaComplect");
 
                     b.Navigation("SborkaZaiavkas");
                 });
 
             modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Zaiavka", b =>
                 {
-                    b.Navigation("PostavkaZaiavkas");
-
                     b.Navigation("SborkaZaiavka");
+                });
+
+            modelBuilder.Entity("ComputerShopDataBaseImplement.Models.Zakupka", b =>
+                {
+                    b.Navigation("complect");
                 });
 #pragma warning restore 612, 618
         }

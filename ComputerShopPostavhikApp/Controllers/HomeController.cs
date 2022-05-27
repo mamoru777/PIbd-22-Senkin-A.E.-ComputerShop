@@ -157,12 +157,17 @@ namespace ComputerShopPostavhikApp.Controllers
         [HttpGet]
         public IActionResult CreateSborka()
         {
-            ViewBag.Complects = APIPostavshik.GetRequest<List<ComplectViewModel>>("api/main/getfullcomplectlist");
+            ViewBag.Complects =  APIPostavshik.GetRequest<List<ComplectViewModel>>("api/main/getfullcomplectlist");
             return View();
         }
         [HttpPost]
-        public void CreateSborka(string sborkaname, int complect, decimal sum)
+        public void CreateSborka(string sborkaname, int complect, decimal sum, List <int> complectsId)
         {
+            List<ComplectViewModel> complects = new List<ComplectViewModel>();
+            foreach (var complectId in complectsId)
+            {
+                complects.Add(APIPostavshik.GetRequest<ComplectViewModel>($"api/main/getcomplect?complectId={complectId}"));
+            }
             if (sum == 0 || sum == 0)
             {
                 return;
@@ -172,17 +177,155 @@ namespace ComputerShopPostavhikApp.Controllers
             {
                 SborkaName = sborkaname,
                 PostavshikId = Convert.ToInt32(Program.Postavshik.Id),
-                SborkaComplect = new Dictionary<int, (string, int)>(),
+                SborkaComplect = complects.ToDictionary(x => x.Id, x => x.ComplectName),
                 Sum = sum,
             }); 
             Response.Redirect("Index");
         }
 
         [HttpPost]
-        public decimal Calc (decimal sum, int complect)
+        public decimal Calc (decimal count, int complect)
         {
             ComplectViewModel prod = APIPostavshik.GetRequest<ComplectViewModel>($"api/main/getcomplect?complectId={complect}");
-            return sum + prod.Price;
+            return count + prod.Price;
+        }
+
+        [HttpGet]
+        public IActionResult Zakupka()
+        {
+            if (Program.Postavshik == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return
+            View(APIPostavshik.GetRequest<List<ZakupkaViewModel>>($"/api/main/getzakupkalist?postavshikid={Program.Postavshik.Id}"));
+        }
+
+        [HttpGet]
+        public IActionResult CreateZakupka()
+        {
+            ViewBag.Complects = APIPostavshik.GetRequest<List<ComplectViewModel>>("api/main/getfullcomplectlist");
+            return View();
+        }
+
+        [HttpPost]
+        public void CreateZakupka(string zakupkaname, DateTime datebuy, int complect)
+        {
+            if (!string.IsNullOrEmpty(zakupkaname) && !string.IsNullOrEmpty(Convert.ToString(datebuy)) && !string.IsNullOrEmpty(Convert.ToString(complect)))
+            {
+                APIPostavshik.PostRequest("api/main/createzakupka", new ZakupkaBindingModel
+                {
+                    ZakupkaName = zakupkaname,
+                    PostavshikId = Convert.ToInt32(Program.Postavshik.Id),
+                    DateBuy = datebuy,
+                    ComplectId = complect
+                });
+                Response.Redirect("Complect");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult PolTechnic()
+        {
+            if (Program.Postavshik == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return
+            View(APIPostavshik.GetRequest<List<PolTechnicViewModel>>($"/api/main/getpoltechniclist"));
+        }
+
+        [HttpGet]
+        public IActionResult CreatePolTechnic()
+        {
+            ViewBag.Complects = APIPostavshik.GetRequest<List<ComplectViewModel>>("api/main/getfullcomplectlist");
+            return View();
+        }
+
+        [HttpPost]
+        public void CreatePolTechnic(string poltechnicname, DateTime datepos, int complect, List<int> complectsId)
+        {
+            List<ComplectViewModel> complects = new List<ComplectViewModel>();
+            foreach (var complectId in complectsId)
+            {
+                complects.Add(APIPostavshik.GetRequest<ComplectViewModel>($"api/main/getcomplect?complectId={complectId}"));
+            }
+            //прописать запрос
+            APIPostavshik.PostRequest("api/main/createpoltechnic", new PolTechnicBindingModel
+            {
+                PolTechnicName = poltechnicname,
+                ComplectPolTechnic = complects.ToDictionary(x => x.Id, x => x.ComplectName),
+                DatePos = datepos
+            });
+            Response.Redirect("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Zaiavka()
+        {
+            if (Program.Postavshik == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return
+            View(APIPostavshik.GetRequest<List<ZaiavkaViewModel>>($"/api/main/getzaiavkalist"));
+        }
+
+        [HttpGet]
+        public IActionResult CreateZaiavka()
+        {
+            ViewBag.Sborkas = APIPostavshik.GetRequest<List<SborkaViewModel>>("api/main/getfullsborkalist");
+            return View();
+        }
+
+        [HttpPost]
+        public void CreateZaiavka(string zaiavkaname, int sborka, List<int> sborkasId)
+        {
+            List<SborkaViewModel> sborkas = new List<SborkaViewModel>();
+            foreach (var sborkaId in sborkasId)
+            {
+                sborkas.Add(APIPostavshik.GetRequest<SborkaViewModel>($"api/main/getsborka?sborkaId={sborkaId}"));
+            }
+            //прописать запрос
+            APIPostavshik.PostRequest("api/main/createzaiavka", new ZaiavkaBindingModel
+            {
+                ZaiavkaName = zaiavkaname,
+                SborkaZaiavka = sborkas.ToDictionary(x => x.Id, x => x.SborkaName),
+            });
+            Response.Redirect("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Postavka()
+        {
+            if (Program.Postavshik == null)
+            {
+                return Redirect("~/Home/Enter");
+            }
+            return
+            View(APIPostavshik.GetRequest<List<PostavkaViewModel>>($"/api/main/getpostavkalist"));
+        }
+
+        [HttpGet]
+        public IActionResult CreatePostavka()
+        {
+            ViewBag.Zakupkas = APIPostavshik.GetRequest<List<ZakupkaViewModel>>("api/main/getfullzakupkalist");
+            return View();
+        }
+
+        [HttpPost]
+        public void CreatePostavka(string postavkaname, DateTime postavkacreate, int zakupka)
+        {
+            if (!string.IsNullOrEmpty(postavkaname) && !string.IsNullOrEmpty(Convert.ToString(postavkacreate)) && !string.IsNullOrEmpty(Convert.ToString(zakupka)))
+            {
+                APIPostavshik.PostRequest("api/main/createpostavka", new PostavkaBindingModel
+                {
+                    PostavkaName = postavkaname,
+                    PostavkaCreate = postavkacreate,
+                    ZakupkaId = zakupka
+                });
+                Response.Redirect("Complect");
+            }
         }
     }
 }

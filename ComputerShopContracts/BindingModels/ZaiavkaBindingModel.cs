@@ -10,6 +10,8 @@ namespace ComputerShopContracts.BindingModels
     {
         public int? Id { get; set; }
         public string ZaiavkaName { get; set; }
+
+        public Dictionary<int, string> SborkaZaiavka { get; set; }
         //public virtual List<PostavkaZaiavka> PostavkaZaiavkas { get; set; }
     }
 }

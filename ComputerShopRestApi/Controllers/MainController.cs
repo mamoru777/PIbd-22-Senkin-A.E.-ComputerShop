@@ -16,11 +16,17 @@ namespace ComputerShopRestApi.Controllers
         private readonly IComplectLogic _complect;
         private readonly ISborkaLogic _sborka;
         private readonly IZakupkaLogic _zakupka;
-        public MainController(IComplectLogic complect, ISborkaLogic sborka, IZakupkaLogic zakupka)
+        private readonly IPolTechnicLogic _poltechnic;
+        private readonly IZaiavkaLogic _zaiavka;
+        private readonly IPostavkaLogic _postavka;
+        public MainController(IComplectLogic complect, ISborkaLogic sborka, IZakupkaLogic zakupka, IPolTechnicLogic poltechniclogic, IZaiavkaLogic zaiavkaLogic, IPostavkaLogic postavkaLogic)
         {
             _complect = complect;
             _sborka = sborka;
             _zakupka = zakupka;
+            _poltechnic = poltechniclogic;
+            _zaiavka = zaiavkaLogic;
+            _postavka = postavkaLogic;
         }
         [HttpGet]
         public List<ComplectViewModel> GetFullComplectList() => _complect.Read(null)?.ToList();
@@ -31,10 +37,38 @@ namespace ComputerShopRestApi.Controllers
         [HttpPost]
         public void CreateComplect(ComplectBindingModel model) => _complect.CreateOrUpdate(model);
         [HttpGet]
+        public List<SborkaViewModel> GetFullSborkaList() => _sborka.Read(null)?.ToList();
+        [HttpGet]
         public List<SborkaViewModel> GetSborkaList(int postavshikId) => _sborka.Read(new SborkaBindingModel { PostavshikId = postavshikId });
         [HttpGet]
-        public ComplectViewModel GetSborka(int sborkaId) => _complect.Read(new ComplectBindingModel { Id = sborkaId })?[0];
+        public SborkaViewModel GetSborka(int sborkaId) => _sborka.Read(new SborkaBindingModel { Id = sborkaId })?[0];
         [HttpPost]
         public void CreateSborka (SborkaBindingModel model) => _sborka.CreateOrUpdate(model);
+        [HttpGet]
+        public List<ZakupkaViewModel> GetZakupkaList(int postavshikid) => _zakupka.Read(new ZakupkaBindingModel { PostavshikId = postavshikid });
+        [HttpGet]
+        public List<ZakupkaViewModel> GetFullZakupkaList() => _zakupka.Read(null)?.ToList();
+        [HttpGet]
+        public ZakupkaViewModel GetZakupka(int zakupkaId) => _zakupka.Read(new ZakupkaBindingModel { Id = zakupkaId })?[0];
+        [HttpPost]
+        public void CreateZakupka(ZakupkaBindingModel model) => _zakupka.CreateOrUpdate(model);
+
+        [HttpPost]
+        public void CreatePolTechnic(PolTechnicBindingModel model) => _poltechnic.CreateOrUpdate(model);
+
+        [HttpGet]
+        public List<PolTechnicViewModel> GetPolTechnicList() => _poltechnic.Read(null)?.ToList();
+
+        [HttpPost]
+        public void CreateZaiavka(ZaiavkaBindingModel model) => _zaiavka.CreateOrUpdate(model);
+
+        [HttpGet]
+        public List<ZaiavkaViewModel> GetZaiavkaList() => _zaiavka.Read(null)?.ToList();
+
+        [HttpPost]
+        public void CreatePostavka(PostavkaBindingModel model) => _postavka.CreateOrUpdate(model);
+
+        [HttpGet]
+        public List<PostavkaViewModel> GetPostavkaList() => _postavka.Read(null)?.ToList();
     }
 }

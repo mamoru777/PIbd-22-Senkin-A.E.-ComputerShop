@@ -1,0 +1,27 @@
+﻿@using ComputerShopContracts.ViewModels
+@{
+    ViewData["Title"] = "CreateZaiavka";
+    //ViewData["Title"] = "Complect";
+}
+@model List<ComplectViewModel>
+
+<div class="text-center">
+    <h2 class="display-4">Создание заказа</h2>
+</div>
+<form method="post">
+    <div class="row">
+        <div class="col-4">Название заказа:</div>
+        <div class="col-8"><input type="text" name="zaiavkaname" id="zaiavkaname" /></div>
+    </div>
+    <div class="row">
+        <div class="col-4">Сборка:</div>
+        <div class="col-8">
+            <select id="sborkaId" name="sborkaId" class="form-control" multiple asp-items="@(new SelectList(@ViewBag.Sborkas,"Id", "SborkaName"))"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Создать" class="btn btnprimary" /></div>
+    </div>
+
+</form>

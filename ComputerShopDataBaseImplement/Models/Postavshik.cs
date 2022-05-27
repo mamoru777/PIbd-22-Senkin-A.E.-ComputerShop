@@ -21,5 +21,7 @@ namespace ComputerShopDataBaseImplement.Models
         public virtual List<Complect> Complects { get; set; }
         [ForeignKey("PostavshikId")]
         public virtual List<Sborka> Sborkas { get; set; }
+        [ForeignKey("PostavshikId")]
+        public virtual List<Zakupka> Zakupkas { get; set; }
     }
 }

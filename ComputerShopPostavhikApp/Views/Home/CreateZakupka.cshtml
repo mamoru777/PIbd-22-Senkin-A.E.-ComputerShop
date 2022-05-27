@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "CreateZakupka";
+}
+<div class="text-center">
+    <h2 class="display-4">Закупка комплектующего</h2>
+</div>
+<form method="post">
+    <div class="row">
+        <div class="col-4">Название:</div>
+        <div class="col-8">
+            <input type="text" name="zakupkaname" id="zakupkaname" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">Дата закупки:</div>
+        <div class="col-8"><input type="datetime" name="datebuy" id="datebuy" /></div>
+    </div>
+    <div class="row">
+        <div class="col-4">Комплектующее:</div>
+        <div class="col-8">
+            <select id="complect" name="complect" class="form-control" asp-items="@(new SelectList(@ViewBag.Complects,"Id", "ComplectName"))"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4"><input type="submit" value="Создать" class="btn btnprimary" /></div>
+    </div>
+</form>

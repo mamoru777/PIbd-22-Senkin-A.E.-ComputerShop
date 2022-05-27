@@ -1,0 +1,52 @@
+﻿@using ComputerShopContracts.ViewModels
+@model List<PolTechnicViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="text-center">
+    <h1 class="display-4">Получение техники</h1>
+</div>
+<div class="text-center">
+    @{
+        if (Model == null)
+        {
+            <h3 class="display-4">Авторизируйтесь</h3>
+            return;
+        }
+        <p>
+            <a asp-action="CreatePolTechnic">Создать получение техники</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Номер
+                    </th>
+                    <th>
+                        Название поставки
+                    </th>
+                    <th>
+                        Дата получения
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PolTechnicName)
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DatePos)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

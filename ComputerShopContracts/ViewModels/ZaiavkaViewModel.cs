@@ -12,5 +12,7 @@ namespace ComputerShopContracts.ViewModels
         public int? Id { get; set; }
         [DisplayName("Название Заявки")]
         public string ZaiavkaName { get; set; }
+
+        public Dictionary<int, string> SborkaZaiavka { get; set; }
     }
 }
